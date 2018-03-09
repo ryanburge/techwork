@@ -1,0 +1,110 @@
+---
+title: "Tech Work by Job Class"
+author: "Ryan Burge"
+date: "March 8, 2018"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+library(fst)
+library(tidyverse)
+library(car)
+library(janitor)
+library(extrafont)
+library(forcats)
+
+gss <- read.fst("C://gss.fst") %>% filter(year == 2014)
+```
+
+## Here's what I Did 
+
+
+I wanted to start by breaking the Occupational Codes into their major groups to get a sense of which ones are using technology the most at work. These are the headings given by the Census Bureau. 
+
+
+```{r}
+gss <- gss %>% 
+  mutate(newocc = recode(occ10, "0:999 = 'Management';
+                                  1000:1999 = 'Technology, Engineering and Science';
+                                  2000:2999 = 'Education, Legal, Media';
+                                  3000:3540 = 'Health and Technology';
+                                  3600:4650 = 'Service';
+                                  4700:4999 = 'Sales';
+                                  5000:5999 = 'Office and Admin Support';
+                                  6000:7630 = 'Construction and Maintenance';
+                                  7700:9750 = 'Production and Transportation';
+                                  9800:9830 = 'Military'"))
+
+```
+
+```{r}
+mean <- gss %>% 
+  group_by(newocc) %>% 
+  summarise(mean = mean(usetech, na.rm = TRUE),
+            sd = sd(usetech, na.rm = TRUE), 
+            n = n()) %>% 
+  mutate(se = sd/sqrt(n),
+         lower = mean - qt(1 - (0.05 /2),  n -1) * se,
+         upper = mean + qt(1 - (0.05 /2),  n -1) * se) 
+
+mean <- mean %>% 
+  mutate(newocc = as.factor(newocc)) %>% na.omit()
+
+mean$class <- c("Low", "High", "High", "High", "Low", "Low", "Low", "Low", "Low", "High")
+
+```
+
+I wanted to calcuate the mean of "usetech" for each of the ten occupational classes and then I wanted to compare that to the typology used in the "CyberSlacking" piece. They said that four occupational classes are high tech ones: management, business, financial, or professional. I marked each of those as low or high. Here's the graph 
+
+
+
+```{r, echo = FALSE}
+mean_rb <- function(base_size = 25, base_family = "Product Sans") 
+{theme(legend.position = "bottom", 
+       legend.title = element_blank(), 
+       legend.spacing.x = unit(1, "cm"),
+       legend.spacing.y = unit(1, "cm"),
+       panel.background = element_rect(fill = "white"), 
+       panel.grid.major.x =  element_line(colour = "gray48", size = .25), 
+       panel.grid.minor.x =  element_line(colour = "gray48", size = .25, linetype = "dashed"),
+       text = element_text(base_family, size = 28),
+       plot.title = element_text(family = "Product Sans", size = 22, face = "bold"),
+       plot.subtitle = element_text(family = "Product Sans", size = 20, vjust =-1),
+       plot.caption = element_text(family = "Product Sans", size =20),
+       axis.title.x =  element_text(family = "Product Sans", size =24),
+       axis.title.y =  element_text(family = "Product Sans", size =24), 
+       axis.text.x = element_text(family = "Product Sans", size =18)
+)
+  
+}
+```
+
+```{r, fig.width= 16, fig.height= 12}
+mean %>% 
+  ggplot(., aes(x= mean, y= fct_reorder(newocc, mean))) + 
+  geom_point(shape=21, size =4, aes(fill = factor(class)), show.legend = TRUE) +
+  geom_errorbarh(aes(xmin = lower, xmax=upper, colour = factor(class)), height=0, size = 1, show.legend = FALSE) + 
+  mean_rb() + 
+  scale_x_continuous(limits = c(0, 100)) +
+  labs(x = "What Percentage of Time Do You Spend on Technology?", y = "Occupational Class", title = "Which Occupational Classes Spend the Most Time on Technology?", caption = "Data: GSS 2014")
+
+```
+
+
+## So, what do we do? 
+
+
+It's clear that the distinction used in "Cyberslacking" is not backed up by this data. We need to create division. Could be dichotomous or trichotomous. We need to make a cutoff point. 
+
+Two possibilities: 
+
+1. Take health and technology and everything above that and code as high technology use. Everything below would be low technology use. 
+2. Do a trichotomous. It's clear that the bottom three are clearly lower than the rest. Middle category is education + military + health. Top category is the top 4. 
+
+
+What do you think? 
+
+
+
