@@ -1,18 +1,18 @@
 ## All this to create a spreadsheet which was used for figuring out job classes
-library(haven)
-anes16 <- read_dta("D://techwork/anes_timeseries_2016.dta")
-
-
-jj <- anes16  %>% 
-  mutate(jobs = to_factor(V161291b)) %>% 
-  tabyl(jobs)
-
-write.csv(jj, "job_lists_anes16.csv")
+# library(haven)
+# anes16 <- read_dta("D://techwork/anes_timeseries_2016.dta")
+# 
+# 
+# jj <- anes16  %>% 
+#   mutate(jobs = to_factor(V161291b)) %>% 
+#   tabyl(jobs)
+# 
+# write.csv(jj, "job_lists_anes16.csv")
 
 
 ## Now, we recode our variables 
 
-anes16 <- read.fst("C://anes16.fst")
+# anes16 <- read.fst("C://anes16.fst")
 
 anes16 <- anes16 %>% 
   mutate(jobs = recode(V161291b, "1:7=1; 8:16=2; 17:29=3; 30:35=4; 36:54=5; 55:59=6; 60:66=7; 67:79=8; 80:95=9; 96:98=10; else = 99"))
@@ -28,6 +28,29 @@ anes16 <- anes16 %>%
                               8 = 'Construction and Maintenance';
                               9 = 'Production and Transportation';
                               10 = 'Military'"))
+
+anes16 <- anes16 %>% 
+  mutate(know1 = recode(V162072,  "1=1; else =0")) %>% 
+  mutate(know2 = recode(V162073a, "1=1; else =0")) %>% 
+  mutate(know3 = recode(V162074a, "1=1; else =0")) %>% 
+  mutate(know4 = recode(V162075a, "1=1; else =0")) %>% 
+  mutate(know5 = recode(V162076a, "1=1; else =0")) %>% 
+  mutate(know = know1 + know2 + know3 + know4 + know5)
+
+anes16 <- anes16 %>% 
+  mutate(polint = 6 - V161003) 
+  
+
+anes16 <- anes16 %>% 
+  mutate(gender = recode(V161342, "1 = 'Male'; 2 = 'Female'; else = 99"))
+
+anes16 <- anes16 %>% 
+  mutate(income = recode(V161361x, "-5=0; -9=0")) %>% 
+  mutate(married = recode(V161268, "1=1; else=0")) %>% 
+  mutate(kids = recode(V161324, "-9=0")) %>% 
+  mutate(educ = recode(V161270, "-9=0; 90=0; 95=0"))
+  
+  
 
 ### Take our usetech variable and find the mean, then join
 
@@ -50,5 +73,7 @@ mean <- gss %>%
   rename(jobs = newocc)
 
 com <- left_join(anes16, mean)
+
+
 
 
