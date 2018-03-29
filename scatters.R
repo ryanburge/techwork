@@ -1,10 +1,12 @@
 com %>% 
   filter(gender != 99) %>% 
   ggplot(., aes(x=mean, y = know)) + geom_point() + geom_smooth(method = lm) + geom_jitter(width = 2.5) +
-  labs(x = "Mean Use of Technology by Job Type", y = "Number Correct of Knowledge Questions") +
-  facet_grid(.~ gender)
+  labs(x = "Mean Use of Technology by Job Type", y = "Number of Knowledge Questions Correct", title = "Political Knowledge Gain by Tech Use", caption = "Data: ANES 2016") +
+  facet_grid(.~ gender) + long_rb() +
+  theme(plot.title = element_text(family = "Product Sans", size = 54, vjust =0, face = "bold"))  +
+  scale_x_continuous(labels = function(x) paste0(x, "%")) + theme(panel.spacing = unit(2, "lines"))
 
-ggsave(file="scatter_facet.png", type = "cairo-png", width = 15, height = 10)
+ggsave(file="images/scatter_facet.png", type = "cairo-png", width = 15, height = 10)
 
 com %>% 
   group_by(gender) %>% 
@@ -24,5 +26,5 @@ com %>%
   theme(axis.text.x = element_text(family = "Product Sans", size =16, angle = 0)) +
   scale_fill_brewer(palette="Set3") + theme(axis.text.x = element_text(family = "Product Sans", size =26, hjust = .50))
 
-ggsave(file="occ_ridge.png", type = "cairo-png", width = 15, height = 10)
+ggsave(file="images/occ_ridge_new.png", type = "cairo-png", width = 15, height = 10)
 

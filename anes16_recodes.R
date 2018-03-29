@@ -20,7 +20,7 @@ anes16 <- anes16 %>%
 anes16 <- anes16 %>% 
   mutate(jobs = recode(jobs, "1 = 'Management';
                               2 = 'Technology, Engineering and Science';
-                              3 = 'Education, Legal, Media';
+                              3 = 'Education, Legal and Media';
                               4 = 'Health and Technology';
                               5 = 'Service';
                               6 = 'Sales';
@@ -57,7 +57,7 @@ anes16 <- anes16 %>%
 gss <- gss %>% 
   mutate(newocc = recode(occ10, "0:999 = 'Management';
                          1000:1999 = 'Technology, Engineering and Science';
-                         2000:2999 = 'Education, Legal, Media';
+                         2000:2999 = 'Education, Legal, and Media';
                          3000:3540 = 'Health and Technology';
                          3600:4650 = 'Service';
                          4700:4999 = 'Sales';

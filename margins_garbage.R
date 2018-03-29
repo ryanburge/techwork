@@ -19,7 +19,7 @@ c %>%
   theme(plot.title = element_text(family = "Product Sans", size = 24, vjust =2, face = "bold")) +
   scale_y_continuous(limits = c(1,3.5))
 
-ggsave(file="margins_plot.png", type = "cairo-png", width = 15, height = 10)
+# ggsave(file="margins_plot.png", type = "cairo-png", width = 15, height = 10)
 
 
 com <- com %>% 
@@ -46,9 +46,8 @@ c %>%
   theme(plot.title = element_text(family = "Product Sans", size = 24, vjust =2, face = "bold")) +
   scale_y_continuous(limits = c(1,3.5))
 
-ggsave(file="margins_plot_female.png", type = "cairo-png", width = 15, height = 10) 
+# ggsave(file="margins_plot_female.png", type = "cairo-png", width = 15, height = 10) 
   
-
 
 com <- com %>% 
   mutate(int2 = recode(polint, "1:2 = 0; 3:5 =1")) %>% 
@@ -75,7 +74,7 @@ c %>%
   theme(plot.title = element_text(family = "Product Sans", size = 24, vjust =2, face = "bold")) +
   scale_y_continuous(limits = c(1,3.5))
 
-ggsave(file="margins_plot_male.png", type = "cairo-png", width = 15, height = 10)
+# ggsave(file="margins_plot_male.png", type = "cairo-png", width = 15, height = 10)
 
 margin <- bind_rows(femc, menc)
 

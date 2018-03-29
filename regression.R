@@ -1,5 +1,8 @@
+library(broom)
+library(dotwhisker)
 
-anes16 <- anes16 %>% 
+
+com <- com %>% 
   mutate(income = recode(V161361x, "-5=0; -9=0")) %>% 
   mutate(married = recode(V161268, "1=1; else=0")) %>% 
   mutate(kids = recode(V161324, "-9=0")) %>% 
@@ -11,6 +14,10 @@ com <- com %>%
   mutate(educ2 = educ/16) %>% 
   mutate(polint2 = polint/5) %>% 
   mutate(usetech = mean/78.19697)
+
+fem <- com %>% filter(gender == "Female")
+men <- com %>% filter(gender == "Male")
+
 
 reg1 <- lm(know ~ usetech + polint2 + educ2 + kids2 + inc2, data = men)
 reg2 <- lm(know ~ usetech + polint2 + educ2 + kids2 + inc2, data = fem)
@@ -44,14 +51,14 @@ regress_rb <- function(base_size = 25, base_family = "Product Sans")
 }
 
 
+
 dwplot(fullreg, dodge_size = .15) %>% 
   relabel_predictors(c(educ2 ="Education", kids2 = "Have Kids", polint2 = "Political Interest", usetech = "Technology at Work", inc2 = "Income")) +
   labs(x="Political Knowledge", y="", title="Which Factors Lead to Greater Political Knowledge? ", caption="Data from CCES 2016") + regress_rb() +
-  geom_vline(xintercept = 0, colour = "grey60", linetype = 1) + guides(colour = guide_legend(reverse = TRUE))
+  geom_vline(xintercept = 0, colour = "grey60", linetype = 1) + guides(colour = guide_legend(reverse = TRUE)) + 
+  
 
 ggsave(file="dwplot_both.png", type = "cairo-png", width = 18, height = 10) 
-
-
 
 
 
