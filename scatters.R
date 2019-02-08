@@ -28,3 +28,7 @@ com %>%
 
 ggsave(file="images/occ_ridge_new.png", type = "cairo-png", width = 15, height = 10)
 
+
+
+
+

@@ -7,7 +7,7 @@ men <- com %>% filter(gender == "Male")
 reg1 <- lm(know ~ mean*news, data = fem)
 reg2 <- lm(know ~ mean*news, data = men)
 
-f <- prediction(reg1)
+f <- prediction(reg1) %>% 
 m <- prediction(reg2)
 
 x <- bind_rows(m, f)

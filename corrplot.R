@@ -15,4 +15,4 @@ ggcorrplot(plot, lab = TRUE) +
 
 
 
-ggsave(file="corrplot.png", type = "cairo-png", width = 18, height = 10) 
+ggsave(file="D://techwork/images/corrplot.png", type = "cairo-png", width = 18, height = 10) 

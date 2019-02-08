@@ -8,7 +8,12 @@ anes16 %>%
 
 anes16 %>% 
   group_by(gender) %>% 
-  summarise(mean = mean(know, na.rm = TRUE))
+  summarise(mean = mean(know, na.rm = TRUE),
+            sd = sd(know, na.rm = TRUE), 
+            n = n()) %>% 
+  mutate(se = sd/sqrt(n),
+         lower = mean - qt(1 - (0.05 /2),  n -1) * se,
+         upper = mean + qt(1 - (0.05 /2),  n -1) * se) 
 
 col <- c("brown4", "chartreuse4", "brown4", "brown4", "brown4", "brown4", "brown4", "black", "black", "black", "coral","coral", "coral")
 
